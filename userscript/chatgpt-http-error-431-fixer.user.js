@@ -51,12 +51,12 @@
     return `${CHATGPT_ORIGIN}${path}`;
   }
 
-  async function optionalCookieList(details) {
+  async function tryCookieList(details, label) {
     try {
-      return await GM.cookie.list(details);
+      return { ok: true, cookies: await GM.cookie.list(details) };
     } catch (error) {
-      console.warn('[conv_key cleaner] optional cookie query skipped:', error);
-      return [];
+      console.warn(`[conv_key cleaner] ${label} cookie query failed:`, error);
+      return { ok: false, cookies: [] };
     }
   }
 
@@ -65,27 +65,35 @@
       throw new Error('GM.cookie is not available in this userscript manager.');
     }
 
-    const ordinary = await GM.cookie.list({ domain: COOKIE_DOMAIN });
-    const partitionedForChatGPT = await optionalCookieList({
+    const ordinary = await tryCookieList({
+      domain: COOKIE_DOMAIN,
+    }, 'ordinary');
+    const partitionedForChatGPT = await tryCookieList({
       domain: COOKIE_DOMAIN,
       partitionKey: { topLevelSite: CHATGPT_ORIGIN },
-    });
-    const partitionedAny = await optionalCookieList({
+    }, 'partitioned-chatgpt');
+    const partitionedAny = await tryCookieList({
       domain: COOKIE_DOMAIN,
       partitionKey: {},
-    });
+    }, 'partitioned-all');
 
     const found = new Map();
     for (const cookie of [
-      ...ordinary,
-      ...partitionedForChatGPT,
-      ...partitionedAny,
+      ...ordinary.cookies,
+      ...partitionedForChatGPT.cookies,
+      ...partitionedAny.cookies,
     ]) {
       if (isTargetCookie(cookie)) {
         found.set(cookieIdentity(cookie), cookie);
       }
     }
-    return [...found.values()];
+
+    // The ChatGPT-specific query is supplemental. Only the all-partitions query
+    // can prove that partitioned enumeration was complete.
+    return {
+      cookies: [...found.values()],
+      complete: ordinary.ok && partitionedAny.ok,
+    };
   }
 
   async function removeTargetCookie(cookie) {
@@ -106,9 +114,12 @@
 
   async function inspectOnly() {
     try {
-      const cookies = await listTargetCookies();
+      const listing = await listTargetCookies();
+      if (!listing.complete) {
+        throw new Error('Cookie enumeration was incomplete.');
+      }
       alert(
-        `Found ${cookies.length} conv_key_* cookie(s).\n`
+        `Found ${listing.cookies.length} conv_key_* cookie(s).\n`
         + 'No cookie values were shown, stored, or sent.\n\n'
         + 'If the count is 0 but the cookies appear in developer tools, allow this script to access HttpOnly cookies in your userscript manager.',
       );
@@ -119,14 +130,18 @@
 
   async function cleanNow() {
     try {
-      const cookies = await listTargetCookies();
-      let removedCount = 0;
+      const listing = await listTargetCookies();
+      if (!listing.complete) {
+        throw new Error('Cookie enumeration was incomplete.');
+      }
+
+      let completedDeleteCount = 0;
       let failedCount = 0;
 
-      for (const cookie of cookies) {
+      for (const cookie of listing.cookies) {
         try {
           await removeTargetCookie(cookie);
-          removedCount += 1;
+          completedDeleteCount += 1;
         } catch (error) {
           failedCount += 1;
           console.error(
@@ -136,8 +151,16 @@
         }
       }
 
+      const verification = await listTargetCookies();
+      const remainingCount = verification.cookies.length;
+      const cleanupComplete = failedCount === 0
+        && verification.complete
+        && remainingCount === 0;
+      const remainingLabel = verification.complete ? String(remainingCount) : 'unknown';
       alert(
-        `Found: ${cookies.length} / Removed: ${removedCount} / Failed: ${failedCount}`,
+        `Cleanup ${cleanupComplete ? 'complete' : 'incomplete'}.\n`
+        + `Found: ${listing.cookies.length} / Delete requests completed: ${completedDeleteCount} / `
+        + `Failed: ${failedCount} / Remaining: ${remainingLabel}`,
       );
     } catch (error) {
       alert(`Cleanup failed: ${error instanceof Error ? error.message : String(error)}`);

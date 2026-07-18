@@ -142,10 +142,9 @@ async function listTargetCookies() {
       ...storeDetails,
     }, 'unpartitioned');
 
-    // Query partitioned cookies too. The explicit top-level key is the relevant
-    // one for ChatGPT opened as a top-level page. The empty key is retained as
-    // a compatibility query for Chromium-family implementations that use it
-    // to enumerate partitioned cookies.
+    // Query partitioned cookies too. The explicit top-level key is a
+    // supplemental compatibility query. The empty key must succeed because it
+    // is the query that covers every partition.
     const partitionedForChatGPT = await tryCookieQuery({
       domain: COOKIE_DOMAIN,
       partitionKey: { topLevelSite: CHATGPT_ORIGIN },
@@ -158,7 +157,7 @@ async function listTargetCookies() {
       ...storeDetails,
     }, 'partitioned-any');
 
-    if (!unpartitioned.ok || (!partitionedForChatGPT.ok && !partitionedAny.ok)) {
+    if (!unpartitioned.ok || !partitionedAny.ok) {
       complete = false;
     }
 
@@ -214,10 +213,15 @@ async function cleanTargetCookies(reason) {
     }
   }
 
-  const successful = listing.complete && failedCount === 0;
+  const verification = await listTargetCookies();
+  const successful = listing.complete
+    && failedCount === 0
+    && verification.complete
+    && verification.cookies.length === 0;
   console.info(
     `[conv_key cleaner] reason=${reason}; matched=${listing.cookies.length}; `
-      + `removed=${removedCount}; failed=${failedCount}; complete=${listing.complete}`,
+      + `removed=${removedCount}; failed=${failedCount}; complete=${listing.complete}; `
+      + `verificationComplete=${verification.complete}; remaining=${verification.cookies.length}`,
   );
 
   return {
