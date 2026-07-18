@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT HTTP 431 Error Fixer",
+  "version": "1.0.0",
+  "description": "Prevents recurring HTTP 431 errors on ChatGPT by safely cleaning up accumulated temporary-chat cookies.",
+  "minimum_chrome_version": "119",
+  "permissions": [
+    "alarms",
+    "cookies",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*"
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "action": {
+    "default_title": "Fix ChatGPT HTTP 431 errors safely"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'none'"
+  }
+}
