@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /*
- * ChatGPT HTTP 431 Error Fixer
+ * ChatGPT HTTP ERROR 431 Fixer
  *
  * Privacy/security properties:
  * - No fetch, XMLHttpRequest, WebSocket, EventSource, sendBeacon, remote code,

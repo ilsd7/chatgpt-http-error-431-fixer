@@ -1,16 +1,18 @@
-# chatgpt-http-error-431-fixer
+# ChatGPT HTTP ERROR 431 Fixer
 
 [English](README.md) · [한국어](docs/README.ko.md) · [日本語](docs/README.ja.md) · [简体中文](docs/README.zh-CN.md) · [Español](docs/README.es.md)
 
 > **Fully local** · **No network access** · **Privacy-first**
 
-Prevents recurring HTTP 431 errors on ChatGPT by safely cleaning up accumulated temporary-chat cookies.
+Prevents recurring HTTP ERROR 431 when using ChatGPT by safely cleaning up accumulated temporary-chat cookies.
 
-Temporary chats create `conv_key_*` cookies that expire one month later. With frequent use, dozens or more of these cookies can accumulate, making the request header large enough to trigger **HTTP 431: Request Header Fields Too Large**. Only those cookies are removed; login cookies and every other ChatGPT cookie remain untouched.
+Temporary chats create `conv_key_*` cookies that expire one month later. With frequent use, dozens or more of these cookies can accumulate, making the request header large enough to trigger HTTP ERROR 431 in Chromium (`Request Header Fields Too Large`). Only those cookies are removed; login cookies and every other ChatGPT cookie remain untouched.
 
 ## Download and install
 
 Get the files from the [latest GitHub Release](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest).
+
+The unpacked extension and userscript do not update automatically. Install each new release manually.
 
 ### Chromium: browser extension
 
@@ -30,8 +32,9 @@ Firefox cannot run this extension because it does not support Manifest V3 backgr
 Use the userscript if you prefer to decide when cookies are removed. It never deletes cookies automatically.
 
 1. Install [Violentmonkey](https://violentmonkey.github.io/) or Tampermonkey Beta.
-2. Download `chatgpt-http-error-431-fixer.user.js` from the release assets.
-3. Import the downloaded file into the userscript manager, or create a new script and paste its contents.
+2. On Chromium 138 or later, open the userscript manager's extension details and enable **Allow User Scripts**.
+3. Download `chatgpt-http-error-431-fixer.user.js` from the release assets.
+4. Import the downloaded file into the userscript manager, or create a new script and paste its contents.
 
 The script adds these commands to the userscript manager's menu:
 
@@ -77,6 +80,6 @@ This project is licensed under the [Apache License 2.0](LICENSE).
 
 ## Notes
 
-This tool does not fix every cause of HTTP 431. It only addresses errors caused by accumulated temporary-chat cookies.
+This tool does not fix every cause of HTTP ERROR 431. It only addresses the case caused by accumulated temporary-chat cookies.
 
 ChatGPT is a trademark of OpenAI. This is an independent personal project.
