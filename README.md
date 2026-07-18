@@ -1,0 +1,1 @@
+# chatgpt-temp-chat-cookie-cleaner
