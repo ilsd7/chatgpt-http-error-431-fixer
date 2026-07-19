@@ -29,9 +29,11 @@ Firefox cannot run this extension because it does not support Manifest V3 backgr
 
 ### Firefox or manual use: userscript
 
-Use the userscript if you prefer to decide when cookies are removed. It never deletes cookies automatically.
+Use the userscript if you prefer to decide when cookies are removed. It never deletes cookies automatically. On Chromium, prefer the extension above; use Tampermonkey Beta only when manual cleanup is required.
 
-1. Install [Violentmonkey](https://violentmonkey.github.io/) or Tampermonkey Beta.
+Violentmonkey 2.43.x and 2.44.0 cannot enumerate cookies on Chromium 150 because they add Firefox-only `firstPartyDomain` to Chromium's cookie API request. A userscript cannot remove a field added inside the manager's service worker. Use the Chromium extension or Tampermonkey Beta instead.
+
+1. On Firefox, install [Violentmonkey](https://violentmonkey.github.io/). On Chromium, install Tampermonkey Beta only if you are not using the extension.
 2. On Chromium 138 or later, open the userscript manager's extension details and enable **Allow User Scripts**.
 3. Download `chatgpt-http-error-431-fixer.user.js` from the release assets.
 4. Import the downloaded file into the userscript manager, or create a new script and paste its contents.
@@ -41,14 +43,14 @@ The script adds these commands to the userscript manager's menu:
 - **Count conv_key_* cookies**
 - **Delete conv_key_* cookies now**
 
-The target cookies are HttpOnly. In Violentmonkey, enable both settings below:
+The target cookies are HttpOnly. When using Violentmonkey on Firefox, enable both settings below:
 
 1. Global advanced setting: **Allow GM_cookie to access HTTP-only cookies**
 2. Script setting: **Allow access to HTTP-only cookies**
 
 Only grant this powerful permission to scripts you have reviewed and trust.
 
-As of July 2026, Violentmonkey is the recommended option and works on Chromium and Firefox. Tampermonkey Beta also works but is not regularly tested by this project. Tampermonkey stable and FireMonkey cannot access the target HttpOnly cookies.
+As of July 2026, Violentmonkey is recommended for Firefox. On Chromium, the browser extension is recommended; Tampermonkey Beta also supports manual cleanup but is not regularly tested by this project. Tampermonkey stable and FireMonkey cannot access the target HttpOnly cookies.
 
 ## What gets deleted
 
@@ -57,7 +59,7 @@ A cookie is removed only when both conditions are true:
 - Its normalized domain is exactly `chatgpt.com`.
 - Its name starts with exactly `conv_key_`.
 
-Both ordinary and partitioned cookies are included. Login cookies and other ChatGPT cookies are never cleanup targets.
+The extension checks ordinary and partitioned cookies. The userscript checks ordinary cookies and the ChatGPT partition; it does not start deleting unless both queries succeed. If only the partition query is unavailable, **Count** reports an explicitly marked ordinary-cookie-only count. Login cookies and other ChatGPT cookies are never cleanup targets.
 
 ## Privacy and security
 

@@ -8,6 +8,7 @@
 // @run-at       document-idle
 // @noframes
 // @grant        GM.cookie
+// @grant        GM_cookie
 // @grant        GM.registerMenuCommand
 // @downloadURL  none
 // @updateURL    none
@@ -22,6 +23,8 @@
   const CHATGPT_ORIGIN = 'https://chatgpt.com';
   const COOKIE_DOMAIN = 'chatgpt.com';
   const COOKIE_PREFIX = 'conv_key_';
+
+  class CookieApiCompatibilityError extends Error {}
 
   function normalizedCookieDomain(domain) {
     return String(domain || '').replace(/^\./, '').toLowerCase();
@@ -51,11 +54,109 @@
     return `${CHATGPT_ORIGIN}${path}`;
   }
 
-  async function tryCookieList(details, label) {
+  function asError(error) {
+    return error instanceof Error ? error : new Error(String(error));
+  }
+
+  function cookieApiError(error) {
+    const normalized = asError(error);
+    if (normalized.message.includes("Unexpected property: 'firstPartyDomain'")) {
+      return new CookieApiCompatibilityError(
+        "Unsupported setup: Violentmonkey's cookie API adds Firefox-only "
+        + 'firstPartyDomain on Chromium. A userscript cannot bypass this. '
+        + 'Use the bundled Chromium extension or Tampermonkey Beta.',
+      );
+    }
+    return normalized;
+  }
+
+  function listCookies(details) {
+    return new Promise((resolve, reject) => {
+      const finish = (cookies, error) => {
+        if (error) {
+          reject(cookieApiError(error));
+        } else if (Array.isArray(cookies)) {
+          resolve(cookies);
+        } else {
+          reject(new Error('Cookie API did not return a cookie array.'));
+        }
+      };
+
+      if (typeof GM_cookie !== 'undefined' && GM_cookie?.list) {
+        try {
+          // Violentmonkey 2.43 can collapse the GM.cookie bridge's error
+          // channel into a non-array Promise result. GM_cookie preserves the
+          // separate result/error callback arguments, so prefer it when granted.
+          GM_cookie.list(details, finish);
+        } catch (error) {
+          reject(cookieApiError(error));
+        }
+        return;
+      }
+
+      let returned;
+      try {
+        // Some userscript-manager builds expose this as a Promise API, while
+        // others complete the same GM.cookie call through its callback.
+        returned = GM.cookie.list(details, finish);
+      } catch (error) {
+        reject(cookieApiError(error));
+        return;
+      }
+
+      if (returned && typeof returned.then === 'function') {
+        returned.then((cookies) => finish(cookies), (error) => reject(cookieApiError(error)));
+      } else if (returned !== undefined) {
+        finish(returned);
+      }
+    });
+  }
+
+  function deleteCookie(details) {
+    return new Promise((resolve, reject) => {
+      const finish = (error) => {
+        if (error) {
+          reject(cookieApiError(error));
+        } else {
+          resolve();
+        }
+      };
+
+      if (typeof GM_cookie !== 'undefined' && GM_cookie?.delete) {
+        try {
+          GM_cookie.delete(details, finish);
+        } catch (error) {
+          reject(cookieApiError(error));
+        }
+        return;
+      }
+
+      let returned;
+      try {
+        returned = GM.cookie.delete(details, finish);
+      } catch (error) {
+        reject(cookieApiError(error));
+        return;
+      }
+
+      if (returned && typeof returned.then === 'function') {
+        returned.then(() => resolve(), (error) => reject(cookieApiError(error)));
+      } else if (returned !== undefined) {
+        resolve();
+      }
+    });
+  }
+
+  async function tryCookieList(details, label, optional = false) {
     try {
-      return { ok: true, cookies: await GM.cookie.list(details) };
+      return { ok: true, cookies: await listCookies(details) };
     } catch (error) {
-      console.warn(`[conv_key cleaner] ${label} cookie query failed:`, error);
+      if (error instanceof CookieApiCompatibilityError) {
+        throw error;
+      }
+      if (!optional) {
+        console.warn(`[conv_key cleaner] ${label} cookie query failed:`, error);
+      }
       return { ok: false, cookies: [] };
     }
   }
@@ -71,28 +172,25 @@
     const partitionedForChatGPT = await tryCookieList({
       domain: COOKIE_DOMAIN,
       partitionKey: { topLevelSite: CHATGPT_ORIGIN },
-    }, 'partitioned-chatgpt');
-    const partitionedAny = await tryCookieList({
-      domain: COOKIE_DOMAIN,
-      partitionKey: {},
-    }, 'partitioned-all');
+    }, 'partitioned-chatgpt', true);
 
     const found = new Map();
     for (const cookie of [
       ...ordinary.cookies,
       ...partitionedForChatGPT.cookies,
-      ...partitionedAny.cookies,
     ]) {
       if (isTargetCookie(cookie)) {
         found.set(cookieIdentity(cookie), cookie);
       }
     }
 
-    // The ChatGPT-specific query is supplemental. Only the all-partitions query
-    // can prove that partitioned enumeration was complete.
+    // A cookie partitioned under another top-level site is not attached to a
+    // top-level ChatGPT request, so it cannot contribute to ChatGPT's HTTP 431.
     return {
       cookies: [...found.values()],
-      complete: ordinary.ok && partitionedAny.ok,
+      complete: ordinary.ok && partitionedForChatGPT.ok,
+      ordinaryInspectionSucceeded: ordinary.ok,
+      partitionedInspectionSucceeded: partitionedForChatGPT.ok,
     };
   }
 
@@ -109,22 +207,26 @@
       details.firstPartyDomain = cookie.firstPartyDomain;
     }
 
-    await GM.cookie.delete(details);
+    await deleteCookie(details);
   }
 
   async function inspectOnly() {
     try {
       const listing = await listTargetCookies();
-      if (!listing.complete) {
+      if (!listing.ordinaryInspectionSucceeded) {
         throw new Error('Cookie enumeration was incomplete.');
       }
+      const partitionNote = listing.partitionedInspectionSucceeded
+        ? ''
+        : '\nPartitioned-cookie inspection is unavailable; this count covers ordinary cookies.';
       alert(
         `Found ${listing.cookies.length} conv_key_* cookie(s).\n`
-        + 'No cookie values were shown, stored, or sent.\n\n'
+        + `No cookie values were shown, stored, or sent.${partitionNote}\n\n`
         + 'If the count is 0 but the cookies appear in developer tools, allow this script to access HttpOnly cookies in your userscript manager.',
       );
     } catch (error) {
-      alert(`Check failed: ${error instanceof Error ? error.message : String(error)}`);
+      const message = error instanceof Error ? error.message : String(error);
+      alert(error instanceof CookieApiCompatibilityError ? message : `Check failed: ${message}`);
     }
   }
 
@@ -157,13 +259,17 @@
         && verification.complete
         && remainingCount === 0;
       const remainingLabel = verification.complete ? String(remainingCount) : 'unknown';
+      const verificationNote = verification.complete
+        ? ''
+        : '\nPost-cleanup cookie verification was incomplete.';
       alert(
         `Cleanup ${cleanupComplete ? 'complete' : 'incomplete'}.\n`
         + `Found: ${listing.cookies.length} / Delete requests completed: ${completedDeleteCount} / `
-        + `Failed: ${failedCount} / Remaining: ${remainingLabel}`,
+        + `Failed: ${failedCount} / Remaining: ${remainingLabel}${verificationNote}`,
       );
     } catch (error) {
-      alert(`Cleanup failed: ${error instanceof Error ? error.message : String(error)}`);
+      const message = error instanceof Error ? error.message : String(error);
+      alert(error instanceof CookieApiCompatibilityError ? message : `Cleanup failed: ${message}`);
     }
   }
 
