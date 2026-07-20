@@ -27,7 +27,6 @@ jobs:
           asset_tag="${GITHUB_REF_NAME//\//-}"
           extension_asset="chatgpt-http-error-431-fixer-extension-${asset_tag}.zip"
           userscript_asset="chatgpt-http-error-431-fixer.user.js"
-          license_asset="LICENSE"
 
           mkdir release
           git archive \
@@ -37,23 +36,19 @@ jobs:
             "${GITHUB_SHA}:extension"
           cp userscript/chatgpt-http-error-431-fixer.user.js \
             "release/$userscript_asset"
-          cp LICENSE "release/$license_asset"
 
           echo "extension_asset=$extension_asset" >> "$GITHUB_OUTPUT"
           echo "userscript_asset=$userscript_asset" >> "$GITHUB_OUTPUT"
-          echo "license_asset=$license_asset" >> "$GITHUB_OUTPUT"
 
       - name: Create draft release
         env:
           GH_TOKEN: ${{ github.token }}
           EXTENSION_ASSET: ${{ steps.package.outputs.extension_asset }}
           USERSCRIPT_ASSET: ${{ steps.package.outputs.userscript_asset }}
-          LICENSE_ASSET: ${{ steps.package.outputs.license_asset }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
             "release/$EXTENSION_ASSET" \
             "release/$USERSCRIPT_ASSET" \
-            "release/$LICENSE_ASSET" \
             --draft \
             --generate-notes \
             --title "$GITHUB_REF_NAME" \
