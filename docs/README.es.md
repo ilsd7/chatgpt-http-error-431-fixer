@@ -4,7 +4,7 @@
 
 > **Funcionamiento local** · **Sin acceso a la red** · **Privacidad ante todo**
 
-Evita la aparición repetida de HTTP ERROR 431 al usar ChatGPT mediante la limpieza segura de las cookies acumuladas de los chats temporales.
+Una pequeña herramienta que limpia de forma segura las cookies acumuladas de los chats temporales para evitar que HTTP ERROR 431 vuelva a aparecer al usar ChatGPT.
 
 Los chats temporales crean continuamente cookies `conv_key_*` que caducan un mes después. Con un uso frecuente pueden acumularse decenas, o incluso más, hacer que la cabecera de las solicitudes sea demasiado grande y provocar HTTP ERROR 431 en Chromium (`Request Header Fields Too Large`). El proyecto elimina únicamente esas cookies acumuladas; no modifica las cookies de inicio de sesión ni ninguna otra cookie de ChatGPT.
 

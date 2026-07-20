@@ -4,7 +4,7 @@
 
 > **ローカルで完結** · **ネットワークアクセスなし** · **プライバシー重視**
 
-蓄積した一時チャットの Cookie を安全に削除し、ChatGPT の利用中に HTTP ERROR 431 が繰り返し発生するのを防ぎます。
+蓄積した一時チャットの Cookie を安全に削除し、ChatGPT の利用中に HTTP ERROR 431 が繰り返し発生するのを防ぐ小さなツールです。
 
 一時チャットを使うと、1か月後に期限切れになる `conv_key_*` Cookie が次々に作成されます。頻繁に使うと数十個以上に増えてリクエストヘッダーが大きくなり、Chromium で HTTP ERROR 431 が発生することがあります（`Request Header Fields Too Large`）。削除するのは蓄積したこれらの Cookie だけで、ログイン Cookie を含むほかの ChatGPT Cookie には触れません。
 

@@ -2,7 +2,7 @@
 // @name         ChatGPT HTTP ERROR 431 Fixer (Manual)
 // @namespace    https://github.com/ilsd7/chatgpt-http-error-431-fixer
 // @version      1.0.0
-// @description  Prevents recurring HTTP ERROR 431 when using ChatGPT by safely cleaning up accumulated temporary-chat cookies.
+// @description  A small tool that safely cleans up accumulated temporary-chat cookies to prevent recurring HTTP ERROR 431 when using ChatGPT.
 // @license      Apache-2.0
 // @match        https://chatgpt.com/*
 // @run-at       document-idle

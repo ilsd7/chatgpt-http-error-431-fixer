@@ -4,7 +4,7 @@
 
 > **完全本地运行** · **无网络访问** · **隐私优先**
 
-通过安全清理累积的临时聊天 Cookie，防止在使用 ChatGPT 时反复出现 HTTP ERROR 431。
+一款小工具，可安全清理累积的临时聊天 Cookie，防止在使用 ChatGPT 时反复出现 HTTP ERROR 431。
 
 使用临时聊天时，系统会不断创建一个月后过期的 `conv_key_*` Cookie。频繁使用后，这些 Cookie 可能累积到数十个甚至更多，使请求头过大，并导致 Chromium 出现 HTTP ERROR 431（`Request Header Fields Too Large`）。本项目只删除这些累积的 Cookie，不会影响登录 Cookie 或其他 ChatGPT Cookie。
 
