@@ -11,8 +11,9 @@
  * - Cookie values are never stored or logged.
  * - Only cookies on the exact chatgpt.com domain whose names start with
  *   "conv_key_" are candidates for removal.
- * - Automatic cleanup after the browser has started is fail-closed: if tab
- *   inspection fails, or a temporary-chat tab is open, no cookie is removed.
+ * - Installation, scheduled, and toolbar cleanup operations are fail-closed:
+ *   if tab inspection fails, or a temporary-chat tab is open, no cookie is
+ *   removed. Browser-startup cleanup is the intentional exception.
  */
 
 const CHATGPT_ORIGIN = 'https://chatgpt.com';

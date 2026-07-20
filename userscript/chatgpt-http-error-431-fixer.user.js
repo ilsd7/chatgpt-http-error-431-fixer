@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT HTTP ERROR 431 Fixer (Manual)
 // @namespace    https://github.com/ilsd7/chatgpt-http-error-431-fixer
-// @version      1.0.0
+// @version      1.0.1
 // @description  A small tool that safely cleans up accumulated temporary-chat cookies to prevent recurring HTTP ERROR 431 when using ChatGPT.
 // @license      Apache-2.0
 // @match        https://chatgpt.com/*
@@ -23,6 +23,8 @@
   const CHATGPT_ORIGIN = 'https://chatgpt.com';
   const COOKIE_DOMAIN = 'chatgpt.com';
   const COOKIE_PREFIX = 'conv_key_';
+  const HTTP_ONLY_PERMISSION_HINT = 'If matching cookies appear in developer tools, '
+    + 'allow this script to access HttpOnly cookies in your userscript manager.';
 
   class CookieApiCompatibilityError extends Error {}
 
@@ -220,11 +222,10 @@
         ? ''
         : '\nPartitioned-cookie inspection is unavailable; this count covers ordinary cookies.';
       const httpOnlyNote = listing.cookies.length === 0
-        ? '\n\nIf the count is 0 but the cookies appear in developer tools, allow this script to access HttpOnly cookies in your userscript manager.'
+        ? `\n\n${HTTP_ONLY_PERMISSION_HINT}`
         : '';
       alert(
-        `Found ${listing.cookies.length} conv_key_* cookie(s).\n`
-        + `No cookie values were shown, stored, or sent.${partitionNote}${httpOnlyNote}`,
+        `Found ${listing.cookies.length} conv_key_* cookie(s).${partitionNote}${httpOnlyNote}`,
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -237,6 +238,13 @@
       const listing = await listTargetCookies();
       if (!listing.complete) {
         throw new Error('Cookie enumeration was incomplete.');
+      }
+      if (listing.cookies.length === 0) {
+        alert(
+          'Found 0 visible conv_key_* cookies.\n'
+          + `No cookies were deleted.\n\n${HTTP_ONLY_PERMISSION_HINT}`,
+        );
+        return;
       }
 
       let completedDeleteCount = 0;
