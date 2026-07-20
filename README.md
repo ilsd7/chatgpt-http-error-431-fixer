@@ -6,7 +6,9 @@
 
 A small tool that safely cleans up accumulated temporary-chat cookies to prevent recurring HTTP ERROR 431 when using ChatGPT.
 
-Temporary chats create `conv_key_*` cookies that expire one month later. With frequent use, dozens or more of these cookies can accumulate, making the request header large enough to trigger HTTP ERROR 431 in Chromium (`Request Header Fields Too Large`). Only those cookies are removed; login cookies and every other ChatGPT cookie remain untouched.
+When you use temporary chats on the ChatGPT website, `conv_key_*` cookies are continually created and expire after one month. Frequent use can cause dozens or more to accumulate, increasing the size of request headers and potentially triggering HTTP ERROR 431 (`Request Header Fields Too Large`).
+
+Only these accumulated cookies are removed; login cookies and every other ChatGPT cookie remain untouched.
 
 ## Download and install
 
@@ -23,7 +25,9 @@ Use the extension if you want automatic cleanup. It requires Chromium 119 or lat
 3. Enable **Developer mode**.
 4. Select **Load unpacked** and choose the extracted folder, or drag the extracted folder onto the Extensions page.
 
-Immediately after installation, the extension checks whether a temporary-chat tab is open and deletes matching cookies only if none is open. After a successful cleanup, it checks again three hours later. If a temporary-chat tab is open at that time, it does not delete anything and checks every 30 minutes until the tab is closed. It also deletes matching cookies immediately when the browser is relaunched after being fully closed. When clicked, the toolbar button checks for an open temporary-chat tab, immediately deletes matching cookies if none is open, and shows the number removed on its badge. If a temporary-chat tab is open, nothing is deleted.
+Immediately after installation, the extension checks whether a temporary-chat tab is open and deletes matching cookies only if none is open. After a successful cleanup, it checks again three hours later. If a temporary-chat tab is open at that time, it does not delete anything and checks every 30 minutes until the tab is closed.
+
+It also deletes matching cookies immediately when the browser is relaunched after being fully closed. When clicked, the toolbar button checks for an open temporary-chat tab, immediately deletes matching cookies if none is open, and shows the number removed on its badge. If a temporary-chat tab is open, nothing is deleted.
 
 Firefox cannot run this extension because it does not support Manifest V3 background service workers. Use the userscript instead.
 
@@ -31,9 +35,11 @@ Firefox cannot run this extension because it does not support Manifest V3 backgr
 
 If you use Firefox or prefer not to install the browser extension, you can use the userscript. It does not support automatic cleanup. Manual cleanup runs whether or not a temporary-chat tab is open, so use it with care. On Chromium, the browser extension above is recommended.
 
-Violentmonkey currently cannot enumerate cookies on Chromium 150 because it adds Firefox-only `firstPartyDomain` to Chromium's cookie API request.
+Violentmonkey currently cannot be used on Chromium because it adds the Firefox-only `firstPartyDomain` to Chromium's cookie API requests. The target cookies are HttpOnly, so you must use Tampermonkey Beta.
 
-1. On Firefox, install [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=firefox). On Chromium, install [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=chrome) if you are not using the extension.
+1. Install the userscript manager for your browser.
+   - Firefox: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=firefox)
+   - Chromium: [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=chrome)
 2. On Chromium 138 or later, open the userscript manager's extension details and enable **Allow User Scripts**.
 3. Download `chatgpt-http-error-431-fixer.user.js` from the release assets.
 4. Import the downloaded file into the userscript manager, or create a new script and paste its contents.
@@ -43,16 +49,12 @@ The script adds these commands to the userscript manager's menu:
 - **Count conv_key_* cookies**
 - **Delete conv_key_* cookies now**
 
-The target cookies are HttpOnly, so Tampermonkey must be the Beta version. When using Violentmonkey on Firefox, enable both settings below:
+When using Violentmonkey on Firefox, enable both settings below:
 
 1. Global advanced setting: **Allow GM_cookie to access HTTP-only cookies**
 2. Script setting: **Allow access to HTTP-only cookies**
 
 Only grant this powerful permission to scripts you have reviewed and trust.
-
-As of July 2026, Firefox can use Violentmonkey or Tampermonkey Beta, but neither Firefox setup has been tested directly by this project. On Chromium, the browser extension is recommended; if you need a userscript, use Tampermonkey Beta. Tampermonkey stable and FireMonkey cannot access the target HttpOnly cookies.
-
-If you encounter a problem, please report it through [GitHub Issues](https://github.com/ilsd7/chatgpt-http-error-431-fixer/issues).
 
 ## What gets deleted
 
@@ -61,7 +63,7 @@ A cookie is removed only when both conditions are true:
 - Its normalized domain is exactly `chatgpt.com`.
 - Its name starts with exactly `conv_key_`.
 
-The extension checks ordinary and partitioned cookies. The userscript checks ordinary cookies and the ChatGPT partition; it does not start deleting unless both queries succeed. If only the partition query is unavailable, **Count** reports an explicitly marked ordinary-cookie-only count. Login cookies and other ChatGPT cookies are never cleanup targets.
+Login cookies and all other cookies are never cleanup targets.
 
 ## Privacy and security
 
@@ -77,6 +79,8 @@ The extension requests only:
 No build is required. Release files contain unminified source copied directly from the repository, so you can inspect them before installation. There is no separate binary-verification process.
 
 See the [Security Policy](SECURITY.md) for vulnerability reporting instructions.
+
+For all other issues, please report them through [GitHub Issues](https://github.com/ilsd7/chatgpt-http-error-431-fixer/issues).
 
 ## License
 
