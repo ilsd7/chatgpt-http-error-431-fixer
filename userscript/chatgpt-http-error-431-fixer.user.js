@@ -1,8 +1,16 @@
 // ==UserScript==
 // @name         ChatGPT HTTP ERROR 431 Fixer (Manual)
+// @name:ko      ChatGPT HTTP ERROR 431 Fixer (수동)
+// @name:ja      ChatGPT HTTP ERROR 431 Fixer（手動）
+// @name:zh-CN   ChatGPT HTTP ERROR 431 Fixer（手动）
+// @name:es      ChatGPT HTTP ERROR 431 Fixer (manual)
 // @namespace    https://github.com/ilsd7/chatgpt-http-error-431-fixer
 // @version      1.0.1
 // @description  A small tool that safely cleans up accumulated temporary-chat cookies to prevent recurring HTTP ERROR 431 when using ChatGPT.
+// @description:ko 누적된 임시 채팅 쿠키를 안전하게 정리해 ChatGPT 사용 중 HTTP ERROR 431이 반복해서 나타나는 것을 방지하는 작은 도구입니다.
+// @description:ja 蓄積した一時チャットの Cookie を安全に削除し、ChatGPT の利用中に HTTP ERROR 431 が繰り返し発生するのを防ぐ小さなツールです。
+// @description:zh-CN 一款小工具，可安全清理累积的临时聊天 Cookie，防止在使用 ChatGPT 时反复出现 HTTP ERROR 431。
+// @description:es Una pequeña herramienta que limpia de forma segura las cookies acumuladas de los chats temporales para evitar que HTTP ERROR 431 vuelva a aparecer al usar ChatGPT.
 // @license      Apache-2.0
 // @match        https://chatgpt.com/*
 // @run-at       document-idle
@@ -23,8 +31,8 @@
   const CHATGPT_ORIGIN = 'https://chatgpt.com';
   const COOKIE_DOMAIN = 'chatgpt.com';
   const COOKIE_PREFIX = 'conv_key_';
-  const HTTP_ONLY_PERMISSION_HINT = 'If matching cookies appear in developer tools, '
-    + 'allow this script to access HttpOnly cookies in your userscript manager.';
+  const HTTP_ONLY_PERMISSION_HINT = 'If matching cookies appear in developer tools, ' +
+    'allow this script to access HttpOnly cookies in your userscript manager.';
 
   class CookieApiCompatibilityError extends Error {}
 
@@ -33,9 +41,9 @@
   }
 
   function isTargetCookie(cookie) {
-    return normalizedCookieDomain(cookie.domain) === COOKIE_DOMAIN
-      && typeof cookie.name === 'string'
-      && cookie.name.startsWith(COOKIE_PREFIX);
+    return normalizedCookieDomain(cookie.domain) === COOKIE_DOMAIN &&
+      typeof cookie.name === 'string' &&
+      cookie.name.startsWith(COOKIE_PREFIX);
   }
 
   function cookieIdentity(cookie) {
@@ -50,9 +58,9 @@
   }
 
   function removalUrl(cookie) {
-    const path = typeof cookie.path === 'string' && cookie.path.startsWith('/')
-      ? cookie.path
-      : '/';
+    const path = typeof cookie.path === 'string' && cookie.path.startsWith('/') ?
+      cookie.path :
+      '/';
     return `${CHATGPT_ORIGIN}${path}`;
   }
 
@@ -64,9 +72,9 @@
     const normalized = asError(error);
     if (normalized.message.includes("Unexpected property: 'firstPartyDomain'")) {
       return new CookieApiCompatibilityError(
-        "Unsupported setup: Violentmonkey's cookie API adds Firefox-only "
-        + 'firstPartyDomain on Chromium. A userscript cannot bypass this. '
-        + 'Use the bundled Chromium extension or Tampermonkey Beta.',
+        "Unsupported setup: Violentmonkey's cookie API adds Firefox-only " +
+        'firstPartyDomain on Chromium. A userscript cannot bypass this. ' +
+        'Use the bundled Chromium extension or Tampermonkey Beta.',
       );
     }
     return normalized;
@@ -218,12 +226,12 @@
       if (!listing.ordinaryInspectionSucceeded) {
         throw new Error('Cookie enumeration was incomplete.');
       }
-      const partitionNote = listing.partitionedInspectionSucceeded
-        ? ''
-        : '\nPartitioned-cookie inspection is unavailable; this count covers ordinary cookies.';
-      const httpOnlyNote = listing.cookies.length === 0
-        ? `\n\n${HTTP_ONLY_PERMISSION_HINT}`
-        : '';
+      const partitionNote = listing.partitionedInspectionSucceeded ?
+        '' :
+        '\nPartitioned-cookie inspection is unavailable; this count covers ordinary cookies.';
+      const httpOnlyNote = listing.cookies.length === 0 ?
+        `\n\n${HTTP_ONLY_PERMISSION_HINT}` :
+        '';
       alert(
         `Found ${listing.cookies.length} conv_key_* cookie(s).${partitionNote}${httpOnlyNote}`,
       );
@@ -241,8 +249,8 @@
       }
       if (listing.cookies.length === 0) {
         alert(
-          'Found 0 visible conv_key_* cookies.\n'
-          + `No cookies were deleted.\n\n${HTTP_ONLY_PERMISSION_HINT}`,
+          'Found 0 visible conv_key_* cookies.\n' +
+          `No cookies were deleted.\n\n${HTTP_ONLY_PERMISSION_HINT}`,
         );
         return;
       }
@@ -265,17 +273,17 @@
 
       const verification = await listTargetCookies();
       const remainingCount = verification.cookies.length;
-      const cleanupComplete = failedCount === 0
-        && verification.complete
-        && remainingCount === 0;
+      const cleanupComplete = failedCount === 0 &&
+        verification.complete &&
+        remainingCount === 0;
       const remainingLabel = verification.complete ? String(remainingCount) : 'unknown';
-      const verificationNote = verification.complete
-        ? ''
-        : '\nPost-cleanup cookie verification was incomplete.';
+      const verificationNote = verification.complete ?
+        '' :
+        '\nPost-cleanup cookie verification was incomplete.';
       alert(
-        `Cleanup ${cleanupComplete ? 'complete' : 'incomplete'}.\n`
-        + `Found: ${listing.cookies.length} / Delete requests completed: ${completedDeleteCount} / `
-        + `Failed: ${failedCount} / Remaining: ${remainingLabel}${verificationNote}`,
+        `Cleanup ${cleanupComplete ? 'complete' : 'incomplete'}.\n` +
+        `Found: ${listing.cookies.length} / Delete requests completed: ${completedDeleteCount} / ` +
+        `Failed: ${failedCount} / Remaining: ${remainingLabel}${verificationNote}`,
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

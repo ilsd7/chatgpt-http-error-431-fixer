@@ -227,7 +227,6 @@ async function cleanTargetCookies(reason) {
 
   return {
     successful,
-    matchedCount: listing.cookies.length,
     removedCount,
     failedCount,
   };
