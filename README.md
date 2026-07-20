@@ -21,9 +21,9 @@ Use the extension if you want automatic cleanup. It requires Chromium 119 or lat
 1. Download the extension ZIP from the release assets and extract it.
 2. Open `chrome://extensions`.
 3. Enable **Developer mode**.
-4. Select **Load unpacked** and choose the extracted folder.
+4. Select **Load unpacked** and choose the extracted folder, or drag the extracted folder onto the Extensions page.
 
-The extension removes matching cookies when the browser starts, then checks again three hours after each successful cleanup. If a temporary-chat tab is open, it waits 30 minutes before trying again. The toolbar button runs the same temporary-chat-aware cleanup whenever you want.
+Immediately after installation, the extension checks whether a temporary-chat tab is open and deletes matching cookies only if none is open. After a successful cleanup, it checks again three hours later. If a temporary-chat tab is open at that time, it does not delete anything and checks every 30 minutes until the tab is closed. It also deletes matching cookies immediately when the browser is relaunched after being fully closed. When clicked, the toolbar button checks for an open temporary-chat tab, immediately deletes matching cookies if none is open, and shows the number removed on its badge. If a temporary-chat tab is open, nothing is deleted.
 
 Firefox cannot run this extension because it does not support Manifest V3 background service workers. Use the userscript instead.
 

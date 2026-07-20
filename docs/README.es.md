@@ -21,9 +21,9 @@ Usa la extensión si quieres que la limpieza sea automática. Requiere Chromium 
 1. Descarga el ZIP de la extensión desde los archivos de la versión y descomprímelo.
 2. Abre `chrome://extensions`.
 3. Activa el **Modo de desarrollador**.
-4. Selecciona **Cargar descomprimida** y elige la carpeta extraída.
+4. Selecciona **Cargar descomprimida** y elige la carpeta extraída, o arrastra esa carpeta a la página de extensiones.
 
-La extensión elimina las cookies objetivo al iniciar el navegador y vuelve a comprobarlas tres horas después de cada limpieza correcta. Si hay una pestaña de chat temporal abierta, espera 30 minutos antes de intentarlo de nuevo. También puedes pulsar el botón de la barra de herramientas para realizar la misma comprobación y limpieza cuando quieras.
+Justo después de instalarse, la extensión comprueba si hay alguna pestaña de chat temporal abierta y solo elimina las cookies objetivo si no hay ninguna. Tras una limpieza correcta, vuelve a comprobarlas tres horas después. Si en ese momento hay una pestaña de chat temporal abierta, no elimina nada y comprueba cada 30 minutos hasta que se cierre. También elimina inmediatamente las cookies objetivo cuando vuelves a iniciar el navegador después de cerrarlo por completo. Al pulsar el botón de la barra de herramientas, la extensión comprueba primero si hay alguna pestaña de chat temporal abierta; si no la hay, elimina inmediatamente las cookies objetivo y muestra en la insignia cuántas ha eliminado. Si hay una pestaña de chat temporal abierta, no elimina nada.
 
 Firefox no puede ejecutar esta extensión porque no admite los service workers en segundo plano de Manifest V3. Utiliza el userscript en su lugar.
 
