@@ -5,12 +5,13 @@
 // @name:zh-CN   ChatGPT HTTP ERROR 431 Fixer（手动）
 // @name:es      ChatGPT HTTP ERROR 431 Fixer (manual)
 // @namespace    https://github.com/ilsd7/chatgpt-http-error-431-fixer
-// @version      1.0.1
+// @version      1.0.2
 // @description  A small tool that safely cleans up accumulated temporary-chat cookies to prevent recurring HTTP ERROR 431 when using ChatGPT.
 // @description:ko 누적된 임시 채팅 쿠키를 안전하게 정리해 ChatGPT 사용 중 HTTP ERROR 431이 반복해서 나타나는 것을 방지하는 작은 도구입니다.
 // @description:ja 蓄積した一時チャットの Cookie を安全に削除し、ChatGPT の利用中に HTTP ERROR 431 が繰り返し発生するのを防ぐ小さなツールです。
 // @description:zh-CN 一款小工具，可安全清理累积的临时聊天 Cookie，防止在使用 ChatGPT 时反复出现 HTTP ERROR 431。
 // @description:es Una pequeña herramienta que limpia de forma segura las cookies acumuladas de los chats temporales para evitar que HTTP ERROR 431 vuelva a aparecer al usar ChatGPT.
+// @author       ilsd7
 // @license      Apache-2.0
 // @match        https://chatgpt.com/*
 // @run-at       document-idle
