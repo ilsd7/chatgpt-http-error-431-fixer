@@ -10,11 +10,15 @@ When you use temporary chats on the ChatGPT website, `conv_key_*` cookies are co
 
 Only these accumulated cookies are removed; login cookies and every other ChatGPT cookie remain untouched.
 
+<br>
+
 ## Download and install
 
 The [latest GitHub Release](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest) contains the Chromium extension and a manually installable copy of the userscript. For the userscript, installation from Greasy Fork is recommended because it can receive updates through the userscript manager.
 
 The unpacked Chromium extension does not update automatically, so install each new release manually.
+
+<br>
 
 ### Chromium: browser extension
 
@@ -30,6 +34,8 @@ Immediately after installation, the extension checks whether a temporary-chat ta
 It also deletes matching cookies immediately when the browser is relaunched after being fully closed. When clicked, the toolbar button checks for an open temporary-chat tab, immediately deletes matching cookies if none is open, and shows the number removed on its badge. If a temporary-chat tab is open, nothing is deleted.
 
 Firefox cannot run this extension because it does not support Manifest V3 background service workers. Use the userscript instead.
+
+---
 
 ### Firefox or manual use: userscript
 
@@ -58,6 +64,8 @@ When using Violentmonkey on Firefox, enable both settings below:
 
 Only grant this powerful permission to scripts you have reviewed and trust.
 
+<br>
+
 ## What gets deleted
 
 A cookie is removed only when both conditions are true:
@@ -66,6 +74,8 @@ A cookie is removed only when both conditions are true:
 - Its name starts with exactly `conv_key_`.
 
 Login cookies and all other cookies are never cleanup targets.
+
+<br>
 
 ## Privacy and security
 
@@ -84,9 +94,13 @@ See the [Security Policy](SECURITY.md) for vulnerability reporting instructions.
 
 For all other issues, please report them through [GitHub Issues](https://github.com/ilsd7/chatgpt-http-error-431-fixer/issues).
 
+<br>
+
 ## License
 
 This project is licensed under the [Apache License 2.0](LICENSE).
+
+<br>
 
 ## Notes
 

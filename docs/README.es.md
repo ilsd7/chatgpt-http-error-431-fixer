@@ -10,11 +10,15 @@ Al usar chats temporales en la versión web de ChatGPT, se crean continuamente c
 
 El proyecto elimina únicamente esas cookies acumuladas; no modifica las cookies de inicio de sesión ni ninguna otra cookie de ChatGPT.
 
+<br>
+
 ## Descarga e instalación
 
 La [última versión publicada en GitHub](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest) incluye la extensión para Chromium y una copia del userscript para instalarla manualmente. Para el userscript, se recomienda instalarlo desde Greasy Fork, ya que así puede recibir actualizaciones mediante el gestor de userscripts.
 
 La extensión de Chromium cargada sin empaquetar no se actualiza automáticamente, así que instala manualmente cada nueva versión.
+
+<br>
 
 ### Chromium: extensión del navegador
 
@@ -30,6 +34,8 @@ Justo después de instalarse, la extensión comprueba si hay alguna pestaña de 
 También elimina inmediatamente las cookies objetivo cuando vuelves a iniciar el navegador después de cerrarlo por completo. Al pulsar el botón de la barra de herramientas, la extensión comprueba primero si hay alguna pestaña de chat temporal abierta; si no la hay, elimina inmediatamente las cookies objetivo y muestra en la insignia cuántas ha eliminado. Si hay una pestaña de chat temporal abierta, no elimina nada.
 
 Firefox no puede ejecutar esta extensión porque no admite los service workers en segundo plano de Manifest V3. Utiliza el userscript en su lugar.
+
+---
 
 ### Firefox o limpieza manual: userscript
 
@@ -58,6 +64,8 @@ Si usas Violentmonkey en Firefox, activa estas dos opciones:
 
 Es un permiso potente. Concédelo únicamente a scripts que hayas revisado y en los que confíes.
 
+<br>
+
 ## Cookies que se eliminan
 
 Una cookie solo se elimina si cumple las dos condiciones siguientes:
@@ -66,6 +74,8 @@ Una cookie solo se elimina si cumple las dos condiciones siguientes:
 - Su nombre empieza por `conv_key_`.
 
 Las cookies de inicio de sesión y las demás cookies no se eliminan.
+
+<br>
 
 ## Privacidad y seguridad
 
@@ -84,9 +94,13 @@ Consulta la [Política de seguridad](../SECURITY.md) para informar de vulnerabil
 
 Para cualquier otro problema, comunícalo a través de [GitHub Issues](https://github.com/ilsd7/chatgpt-http-error-431-fixer/issues).
 
+<br>
+
 ## Licencia
 
 Se distribuye bajo la [Licencia Apache 2.0](../LICENSE).
+
+<br>
 
 ## Notas
 
