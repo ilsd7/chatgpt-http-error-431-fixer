@@ -18,8 +18,6 @@ The [latest GitHub Release](https://github.com/ilsd7/chatgpt-http-error-431-fixe
 
 The unpacked Chromium extension does not update automatically, so install each new release manually.
 
-<br>
-
 ### Chromium: browser extension
 
 Use the extension if you want automatic cleanup. It requires Chromium 119 or later.

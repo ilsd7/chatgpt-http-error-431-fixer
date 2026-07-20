@@ -18,8 +18,6 @@ La [última versión publicada en GitHub](https://github.com/ilsd7/chatgpt-http-
 
 La extensión de Chromium cargada sin empaquetar no se actualiza automáticamente, así que instala manualmente cada nueva versión.
 
-<br>
-
 ### Chromium: extensión del navegador
 
 Usa la extensión si quieres que la limpieza sea automática. Requiere Chromium 119 o posterior.
