@@ -12,9 +12,9 @@ El proyecto elimina únicamente esas cookies acumuladas; no modifica las cookies
 
 ## Descarga e instalación
 
-Descarga los archivos desde la [última versión publicada en GitHub](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest).
+La [última versión publicada en GitHub](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest) incluye la extensión para Chromium y una copia del userscript para instalarla manualmente. Para el userscript, se recomienda instalarlo desde Greasy Fork, ya que así puede recibir actualizaciones mediante el gestor de userscripts.
 
-La extensión descomprimida y el userscript no se actualizan automáticamente. Instala manualmente cada nueva versión.
+La extensión de Chromium cargada sin empaquetar no se actualiza automáticamente, así que instala manualmente cada nueva versión.
 
 ### Chromium: extensión del navegador
 
@@ -41,8 +41,10 @@ Actualmente, Violentmonkey no se puede utilizar en Chromium porque añade `first
    - Firefox: [Violentmonkey](https://violentmonkey.github.io/) o [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=firefox)
    - Chromium: [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=chrome)
 2. En Chromium 138 o posterior, abre los detalles de la extensión del gestor de userscripts y activa **Allow User Scripts**.
-3. Descarga `chatgpt-http-error-431-fixer.user.js` desde los archivos de la versión.
-4. Importa el archivo descargado en el gestor de userscripts, o crea un script nuevo y pega su contenido.
+3. Abre la [página del script en Greasy Fork](GREASY_FORK_SCRIPT_URL) y selecciona **Instalar este script**.
+4. Confirma la instalación en el gestor de userscripts.
+
+Como alternativa, descarga `chatgpt-http-error-431-fixer.user.js` desde la [última versión publicada en GitHub](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest) e impórtalo en el gestor de userscripts. Esta copia instalada manualmente no se actualiza de forma automática.
 
 Una vez instalado, aparecen estos comandos en el menú del gestor de userscripts:
 
@@ -76,7 +78,7 @@ La extensión solo solicita estos permisos:
 - `storage` para recordar la hora de la última limpieza correcta
 - `https://chatgpt.com/*` para limitar el acceso a cookies y pestañas de ChatGPT
 
-No es necesario compilar. Los archivos publicados contienen el código fuente del repositorio sin minificar ni transformar, de modo que puedes revisarlo antes de instalarlo. No hay un proceso adicional de verificación de binarios.
+No es necesario compilar. Los archivos publicados en GitHub Release y el userscript publicado en Greasy Fork contienen el código fuente del repositorio sin minificar ni transformar, de modo que puedes revisarlo antes de instalarlo. No hay un proceso adicional de verificación de binarios.
 
 Consulta la [Política de seguridad](../SECURITY.md) para informar de vulnerabilidades.
 

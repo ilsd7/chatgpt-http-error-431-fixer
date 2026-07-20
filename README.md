@@ -12,9 +12,9 @@ Only these accumulated cookies are removed; login cookies and every other ChatGP
 
 ## Download and install
 
-Get the files from the [latest GitHub Release](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest).
+The [latest GitHub Release](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest) contains the Chromium extension and a manually installable copy of the userscript. For the userscript, installation from Greasy Fork is recommended because it can receive updates through the userscript manager.
 
-The unpacked extension and userscript do not update automatically. Install each new release manually.
+The unpacked Chromium extension does not update automatically, so install each new release manually.
 
 ### Chromium: browser extension
 
@@ -41,8 +41,10 @@ Violentmonkey currently cannot be used on Chromium because it adds the Firefox-o
    - Firefox: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=firefox)
    - Chromium: [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=chrome)
 2. On Chromium 138 or later, open the userscript manager's extension details and enable **Allow User Scripts**.
-3. Download `chatgpt-http-error-431-fixer.user.js` from the release assets.
-4. Import the downloaded file into the userscript manager, or create a new script and paste its contents.
+3. Open the [script page on Greasy Fork](GREASY_FORK_SCRIPT_URL) and select **Install this script**.
+4. Confirm the installation in the userscript manager.
+
+Alternatively, download `chatgpt-http-error-431-fixer.user.js` from the [latest GitHub Release](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest) and import it into the userscript manager. This manually installed copy does not update automatically.
 
 The script adds these commands to the userscript manager's menu:
 
@@ -76,7 +78,7 @@ The extension requests only:
 - `storage` to remember the last successful cleanup time
 - `https://chatgpt.com/*` to limit cookie and tab access to ChatGPT
 
-No build is required. Release files contain unminified source copied directly from the repository, so you can inspect them before installation. There is no separate binary-verification process.
+No build is required. The GitHub Release files and the userscript published on Greasy Fork contain unminified source copied directly from the repository, so you can inspect them before installation. There is no separate binary-verification process.
 
 See the [Security Policy](SECURITY.md) for vulnerability reporting instructions.
 
