@@ -41,7 +41,7 @@ Firefox を利用している場合や、ブラウザー拡張機能を使いた
    - Firefox: [Violentmonkey](https://violentmonkey.github.io/) または [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=firefox)
    - Chromium: [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=chrome)
 2. Chromium 138 以降では、ユーザースクリプトマネージャー拡張機能の詳細を開き、**Allow User Scripts** を有効にします。
-3. [Greasy Fork のスクリプトページ](GREASY_FORK_SCRIPT_URL)を開き、**このスクリプトをインストール**を選択します。
+3. [Greasy Fork のスクリプトページ](https://greasyfork.org/ja/scripts/587874-chatgpt-http-error-431-fixer-manual)を開き、**このスクリプトをインストール**を選択します。
 4. ユーザースクリプトマネージャーの確認画面でインストールを承認します。
 
 別の方法として、[最新の GitHub リリース](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest) から `chatgpt-http-error-431-fixer.user.js` をダウンロードし、ユーザースクリプトマネージャーにインポートできます。この方法で手動インストールしたスクリプトは自動更新されません。

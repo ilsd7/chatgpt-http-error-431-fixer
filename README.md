@@ -41,7 +41,7 @@ Violentmonkey currently cannot be used on Chromium because it adds the Firefox-o
    - Firefox: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=firefox)
    - Chromium: [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=chrome)
 2. On Chromium 138 or later, open the userscript manager's extension details and enable **Allow User Scripts**.
-3. Open the [script page on Greasy Fork](GREASY_FORK_SCRIPT_URL) and select **Install this script**.
+3. Open the [script page on Greasy Fork](https://greasyfork.org/en/scripts/587874-chatgpt-http-error-431-fixer-manual) and select **Install this script**.
 4. Confirm the installation in the userscript manager.
 
 Alternatively, download `chatgpt-http-error-431-fixer.user.js` from the [latest GitHub Release](https://github.com/ilsd7/chatgpt-http-error-431-fixer/releases/latest) and import it into the userscript manager. This manually installed copy does not update automatically.
