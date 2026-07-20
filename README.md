@@ -29,11 +29,11 @@ Firefox cannot run this extension because it does not support Manifest V3 backgr
 
 ### Firefox or manual use: userscript
 
-Use the userscript if you prefer to decide when cookies are removed. It never deletes cookies automatically. On Chromium, prefer the extension above; use Tampermonkey Beta only when manual cleanup is required.
+If you use Firefox or prefer not to install the browser extension, you can use the userscript. It does not support automatic cleanup. Manual cleanup runs whether or not a temporary-chat tab is open, so use it with care. On Chromium, the browser extension above is recommended.
 
-Violentmonkey 2.43.x and 2.44.0 cannot enumerate cookies on Chromium 150 because they add Firefox-only `firstPartyDomain` to Chromium's cookie API request. A userscript cannot remove a field added inside the manager's service worker. Use the Chromium extension or Tampermonkey Beta instead.
+Violentmonkey currently cannot enumerate cookies on Chromium 150 because it adds Firefox-only `firstPartyDomain` to Chromium's cookie API request.
 
-1. On Firefox, install [Violentmonkey](https://violentmonkey.github.io/). On Chromium, install Tampermonkey Beta only if you are not using the extension.
+1. On Firefox, install [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=firefox). On Chromium, install [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=chrome) if you are not using the extension.
 2. On Chromium 138 or later, open the userscript manager's extension details and enable **Allow User Scripts**.
 3. Download `chatgpt-http-error-431-fixer.user.js` from the release assets.
 4. Import the downloaded file into the userscript manager, or create a new script and paste its contents.
@@ -43,14 +43,16 @@ The script adds these commands to the userscript manager's menu:
 - **Count conv_key_* cookies**
 - **Delete conv_key_* cookies now**
 
-The target cookies are HttpOnly. When using Violentmonkey on Firefox, enable both settings below:
+The target cookies are HttpOnly, so Tampermonkey must be the Beta version. When using Violentmonkey on Firefox, enable both settings below:
 
 1. Global advanced setting: **Allow GM_cookie to access HTTP-only cookies**
 2. Script setting: **Allow access to HTTP-only cookies**
 
 Only grant this powerful permission to scripts you have reviewed and trust.
 
-As of July 2026, Violentmonkey is recommended for Firefox. On Chromium, the browser extension is recommended; Tampermonkey Beta also supports manual cleanup but is not regularly tested by this project. Tampermonkey stable and FireMonkey cannot access the target HttpOnly cookies.
+As of July 2026, Firefox can use Violentmonkey or Tampermonkey Beta, but neither Firefox setup has been tested directly by this project. On Chromium, the browser extension is recommended; if you need a userscript, use Tampermonkey Beta. Tampermonkey stable and FireMonkey cannot access the target HttpOnly cookies.
+
+If you encounter a problem, please report it through [GitHub Issues](https://github.com/ilsd7/chatgpt-http-error-431-fixer/issues).
 
 ## What gets deleted
 

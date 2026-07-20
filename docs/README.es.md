@@ -29,11 +29,11 @@ Firefox no puede ejecutar esta extensión porque no admite los service workers e
 
 ### Firefox o limpieza manual: userscript
 
-Usa el userscript si prefieres decidir cuándo se eliminan las cookies. Nunca las borra automáticamente. En Chromium, da prioridad a la extensión anterior y usa Tampermonkey Beta solo si necesitas una limpieza manual.
+Si usas Firefox o prefieres no instalar la extensión del navegador, puedes utilizar el userscript. El userscript no permite la limpieza automática. La limpieza manual se ejecuta independientemente de que haya una pestaña de chat temporal abierta, así que tenlo en cuenta. En Chromium se recomienda la extensión anterior.
 
-Violentmonkey 2.43.x y 2.44.0 no pueden enumerar cookies en Chromium 150 porque añaden `firstPartyDomain`, una propiedad exclusiva de Firefox, a la solicitud de la API de cookies de Chromium. Un userscript no puede eliminar un campo añadido dentro del service worker del gestor. Usa la extensión de Chromium o Tampermonkey Beta.
+Actualmente, Violentmonkey no puede enumerar cookies en Chromium 150 porque añade `firstPartyDomain`, una propiedad exclusiva de Firefox, a la solicitud de la API de cookies de Chromium.
 
-1. En Firefox, instala [Violentmonkey](https://violentmonkey.github.io/). En Chromium, instala Tampermonkey Beta solo si no utilizas la extensión.
+1. En Firefox, instala [Violentmonkey](https://violentmonkey.github.io/) o [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=firefox). En Chromium, instala [Tampermonkey Beta](https://www.tampermonkey.net/index.php?browser=chrome) si no utilizas la extensión.
 2. En Chromium 138 o posterior, abre los detalles de la extensión del gestor de userscripts y activa **Allow User Scripts**.
 3. Descarga `chatgpt-http-error-431-fixer.user.js` desde los archivos de la versión.
 4. Importa el archivo descargado en el gestor de userscripts, o crea un script nuevo y pega su contenido.
@@ -43,14 +43,16 @@ Una vez instalado, aparecen estos comandos en el menú del gestor de userscripts
 - **Count conv_key_* cookies**
 - **Delete conv_key_* cookies now**
 
-Las cookies objetivo son HttpOnly. Si usas Violentmonkey en Firefox, activa estas dos opciones:
+Como las cookies objetivo son HttpOnly, es necesario usar la versión Beta de Tampermonkey. Si usas Violentmonkey en Firefox, activa estas dos opciones:
 
 1. Opción avanzada global: **Allow GM_cookie to access HTTP-only cookies**
 2. Opción del script: **Allow access to HTTP-only cookies**
 
 Es un permiso potente. Concédelo únicamente a scripts que hayas revisado y en los que confíes.
 
-A fecha de julio de 2026, Violentmonkey es la opción recomendada para Firefox. En Chromium se recomienda la extensión del navegador; Tampermonkey Beta también permite la limpieza manual, pero este proyecto no lo prueba periódicamente. Tampermonkey estable y FireMonkey no pueden acceder a las cookies HttpOnly objetivo.
+A fecha de julio de 2026, en Firefox se puede usar Violentmonkey o Tampermonkey Beta, aunque este proyecto no ha probado directamente ninguna de las dos configuraciones en Firefox. En Chromium se recomienda la extensión del navegador; si necesitas un userscript, utiliza Tampermonkey Beta. La versión estable de Tampermonkey y FireMonkey no pueden acceder a las cookies HttpOnly objetivo.
+
+Si encuentras algún problema, comunícalo a través de [GitHub Issues](https://github.com/ilsd7/chatgpt-http-error-431-fixer/issues).
 
 ## Cookies que se eliminan
 

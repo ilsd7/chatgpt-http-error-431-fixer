@@ -219,10 +219,12 @@
       const partitionNote = listing.partitionedInspectionSucceeded
         ? ''
         : '\nPartitioned-cookie inspection is unavailable; this count covers ordinary cookies.';
+      const httpOnlyNote = listing.cookies.length === 0
+        ? '\n\nIf the count is 0 but the cookies appear in developer tools, allow this script to access HttpOnly cookies in your userscript manager.'
+        : '';
       alert(
         `Found ${listing.cookies.length} conv_key_* cookie(s).\n`
-        + `No cookie values were shown, stored, or sent.${partitionNote}\n\n`
-        + 'If the count is 0 but the cookies appear in developer tools, allow this script to access HttpOnly cookies in your userscript manager.',
+        + `No cookie values were shown, stored, or sent.${partitionNote}${httpOnlyNote}`,
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
